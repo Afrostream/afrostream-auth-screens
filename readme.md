@@ -99,3 +99,44 @@ data: base64(JSON.stringify({uuid:string,userId:string,plan:string,expiration:in
 
 this lock by screen functionnality is very weak.
 a user can change auth-screens.afrostream.tv domain or use a proxy to answer { authorized : true }
+
+# Limitation, O(n²)
+
+on every hit, we perform "checkAuth", doing redis.keys()
+This redis call is a O(n) complexity
+
+But,
+Nb keys = Nb users watching in real time x avg screns
+Nb searchs by sec = Nb users watching in real time / player pooling ttl
+=> complexity is ~= O(n²)/ttl with n the number of users watching in real time.
+
+redis can perform a 1 Million search in 40ms on default laptop.
+let say that avg screens = 2 & ttl = 10.
+
+## 100 concurrent users
+
+Nb keys = 200
+Nb searchs by sec = 10
+
+rows searched by sec ~= 2 000   <=> 0ms cpu
+
+## 1 000 concurrent users
+
+Nb keys = 2 000
+Nb searchs by sec = 100
+
+rows searched by sec ~= 200 000  <=> 8ms cpu
+
+## 10 000 concurrent users
+ 
+Nb keys = 20 000
+Nb searchs by sec = 1 000
+
+rows searched by sec ~= 20 000 000 <=> 800ms cpu
+
+## Solution
+
+When reaching 10 000 concurrent users, we will need to change redis algorithm.
+Ex: add a meta hkey user.{userId}.screens containing list of "screen-uuid, with content & timeout" 
+    (manually handle the timeout)
+Or reference other expiring redis keys.
