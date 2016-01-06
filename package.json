@@ -1,0 +1,29 @@
+{
+  "name": "afrostream-auth-screens",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": ". ~/.nvm/nvm.sh && nvm use 4.2.4 && node_modules/.bin/nodemon app/index.js",
+    "test": "mocha -b test/integration"
+  },
+  "engines": {
+    "node": "4.2.4"
+  },
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "nodemon": "^1.8.1"
+  },
+  "dependencies": {
+    "compression": "^1.6.0",
+    "express": "^4.13.3",
+    "express-cluster": "0.0.4",
+    "lodash": "^3.10.1",
+    "node-uuid": "^1.4.7",
+    "toobusy-js": "^0.4.2"
+  }
+}
