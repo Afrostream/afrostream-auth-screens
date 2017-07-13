@@ -9,7 +9,7 @@
     "test": "mocha -b test/integration"
   },
   "engines": {
-    "node": "4.2.4"
+    "node": "4.8.4"
   },
   "author": "",
   "license": "ISC",
